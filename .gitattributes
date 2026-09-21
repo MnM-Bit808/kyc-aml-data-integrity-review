@@ -1,0 +1,9 @@
+# Written by Claude Code — infrastructure, not analysis
+#
+# sealed/answer_key.json records SHA-256 hashes of these files as they were when the generator ran,
+# and acceptance check 10 compares against them. Line-ending conversion on checkout would change
+# the bytes and break that check, so each file is pinned to the line endings it was hashed with.
+# Do not change these lines, and do not renormalise these files.
+generator/*.py                 text eol=lf
+config/generator_ranges.yaml   text eol=crlf
+config/policy.yaml             text eol=crlf
