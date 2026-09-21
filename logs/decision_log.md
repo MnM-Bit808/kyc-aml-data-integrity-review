@@ -255,3 +255,26 @@ file against an independent expectation (size, row count, published statistic) b
    rule's apparent performance.
 
 **Licence:** Community Data License Agreement - Sharing 1.0. Recorded in `docs/sources.md`.
+
+---
+
+## 2026-09-21 - Synthetic layer generated; all ten acceptance checks pass
+
+Generated in a separate session, per CLAUDE.md Section 8.5. The ten acceptance checks in
+`generator/GENERATOR_SPEC.md` were verified two ways:
+
+- **Checks 1-5** (row counts, market split, volumes, label consistency, no leaky column names)
+  were re-run independently by this working session against the output files. All pass: exactly
+  50,000 customers with a unique account key; 21,000 / 18,000 / 11,000 by market with business
+  shares of exactly 25% / 15% / 12%; 924,577 card events; 600,000 statements; zero inconsistent
+  label rows; no column name that encodes planted status.
+- **Checks 6, 7 and 10** read the answer key, so this session cannot and must not run them. The
+  analyst confirmed the generator session printed PASS for all ten.
+
+The generator committed on a separate branch (`sealed-generator`), which was fast-forwarded into
+`main` after review; no merge conflicts. The review confirmed the secret seed comes from
+operating-system entropy, the ranges are read from config, and the script prints only row counts,
+withholding any count that moves with a hidden parameter.
+
+The ranges are now locked, and `config/policy.yaml` is effectively frozen too: the answer key
+records its hash, so editing it would break the Day 10 integrity check.
