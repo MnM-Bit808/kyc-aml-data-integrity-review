@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./sealed/**)",
+      "Bash(cat ./sealed/**)",
+      "Bash(type ./sealed/**)",
+      "Glob(./sealed/**)",
+      "Grep(./sealed/**)"
+    ]
+  }
+}

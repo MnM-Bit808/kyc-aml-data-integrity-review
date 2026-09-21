@@ -1,0 +1,50 @@
+# Written by Claude Code - infrastructure, not analysis
+# Module 6 inputs. EVERY value is an assumption. None has a public benchmark.
+#
+# There is no reliable public source for analyst review throughput; anything findable is
+# vendor marketing. CLAUDE.md Module 6 requires saying so rather than citing it. The honesty
+# is in the labelling and the sensitivity analysis, not in refusing to pick numbers - a model
+# needs inputs to run.
+#
+# THE MEMO LEADS WITH THE SENSITIVITY, NOT THE POINT ESTIMATE.
+# "Between 9 and 26 months depending on two assumptions I could not source" is a stronger and
+# more senior sentence than a false-precision "14.3 months".
+
+status: PROPOSED          # confirm on Day 8 alongside the sensitivity analysis
+proposed_on: 2026-09-20
+source_for_all_values: "Assumption. No public benchmark exists. Chosen for plausibility."
+
+team:
+  analyst_headcount: 12
+  working_days_per_month: 20
+  productive_hours_per_day: 6      # not 8 - meetings, training, admin
+
+throughput:
+  periodic_review_minutes:
+    High: 90
+    Medium: 45
+    Low: 20
+  trigger_review_minutes: 60
+  alert_triage_minutes: 25
+
+customer_impact:
+  contacts_per_alert: 0.6          # not every alert reaches the customer
+  block_rate_per_alert: 0.08
+  documents_requested_per_review: 0.5
+
+scenarios:
+  # Each overrides one or more values above. Every scenario must be reproducible
+  # from this file alone.
+  baseline: {}
+  added_headcount: {}
+  rule_tuning_frees_hours: {}
+  phased_deadline: {}
+
+sensitivity:
+  # Sweep these two. Triage minutes because alert volume is large, so the number multiplies
+  # hardest. Block rate because it drives the entire customer-experience argument and is the
+  # number with the least basis. If the recommendation flips when either moves within a
+  # plausible range, THAT is the finding - say so in the memo.
+  vary:
+    - {input: throughput.alert_triage_minutes, low: 10, high: 45}
+    - {input: customer_impact.block_rate_per_alert, low: 0.02, high: 0.20}

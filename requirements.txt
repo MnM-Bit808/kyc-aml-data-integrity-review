@@ -1,0 +1,34 @@
+# Written by Claude Code - infrastructure, not analysis
+# Unpinned on purpose: pip resolves current versions, then `pip freeze > requirements.lock.txt`
+# captures the exact set that worked. Install from the lock file to reproduce.
+
+# Core data handling
+pandas
+numpy
+pyarrow
+duckdb
+
+# Statistics
+scipy
+statsmodels
+
+# Charts
+matplotlib
+seaborn
+
+# Free-text standardisation (Module 1b)
+rapidfuzz
+
+# Synthetic data generation (sealed session only)
+faker
+
+# Config and testing
+pyyaml
+pytest
+
+# Notebooks
+jupyter
+ipykernel
+
+# Module 8 only (optional module - safe to leave installed)
+anthropic

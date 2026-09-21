@@ -1,0 +1,143 @@
+# Written by Claude Code - infrastructure, not analysis
+#
+# APPROVED 2026-09-20 by the analyst. These are the agreed RANGES.
+# The generator draws a specific value from each range at run time using a secret
+# seed. The ranges are public; the draws are not. Reading this file tells you what
+# COULD have been planted, never what WAS.
+#
+# Each range that can yield "no effect" is marked. Several hypotheses are expected
+# to come out null - reporting a null correctly is a result, not a failure.
+#
+# DO NOT EDIT after the generator has run. Changing a range means regenerating the
+# data and discarding every analysis built on it.
+
+approved_on: 2026-09-20
+approved_by: the analyst
+locked: false          # set true the moment the generator runs
+
+seeds:
+  # TWO seeds, deliberately separated.
+  sampling_seed: 20260331
+  # ^ PUBLIC and fixed. Drives which 50,000 accounts are sampled from the IBM file.
+  #   Must stay public so the analyst can reproduce the identical sample independently
+  #   on Day 2 and check their derivation against the generator's.
+  hidden_parameter_seed: DRAWN_AT_RUNTIME_FROM_OS_ENTROPY
+  # ^ SECRET. Drawn at run time, never written to this file, recorded only in
+  #   sealed/answer_key.json. This is what makes the draws unknowable.
+
+# ---------------------------------------------------------------------------
+# H1 - Market quality ranking
+# NOT a hypothesis test. Under the census decision (logs/decision_log.md,
+# 2026-09-20) "which market is worst" is answered by looking; the counts are
+# exact. The skill H1 exercises is judgement about when a real difference is too
+# small to act on.
+# ---------------------------------------------------------------------------
+H1:
+  base_defect_rate: {dist: uniform, low: 0.05, high: 0.15}
+  worst_market_multiplier: {dist: uniform, low: 1.0, high: 2.5}   # null possible at 1.0
+  drawn_independently_per_dimension: true
+  dimensions: [completeness, validity, timeliness, consistency]
+
+# ---------------------------------------------------------------------------
+# H2 - Data gaps vs transfer_suspicious. THE headline test.
+# Highest null probability in the project by design.
+# ---------------------------------------------------------------------------
+H2:
+  null_probability: 0.30                                          # NULL POSSIBLE
+  odds_ratio_if_not_null: {dist: uniform, low: 1.2, high: 2.2}
+  # Lower bound is 1.2 on purpose: below ~1.15 a "real" effect would be
+  # indistinguishable from the null in practice, which would muddy Day 10.
+
+# ---------------------------------------------------------------------------
+# H3 - Default-value trap. The most likely miss in the project.
+# Only found by checking value DISTRIBUTIONS, never by counting nulls.
+# ---------------------------------------------------------------------------
+H3:
+  present_probability: 0.80                                       # NULL POSSIBLE (20%)
+  affected_share: {dist: uniform, low: 0.25, high: 0.70}
+  market: drawn_at_random
+  field: drawn_at_random_from [risk_rating_low, review_date_equals_onboarding]
+
+# ---------------------------------------------------------------------------
+# H4 - Stale long-tenure customers (Japan)
+# ---------------------------------------------------------------------------
+H4:
+  extra_stale_prob_per_tenure_year: {dist: uniform, low: 0.0, high: 0.06}  # NULL at ~0
+  applies_to_market: JP
+
+# ---------------------------------------------------------------------------
+# H5 - Duplicate business entities (UK)
+# ---------------------------------------------------------------------------
+H5:
+  duplicate_clusters: {dist: uniform_int, low: 0, high: 120}      # NULL POSSIBLE at 0
+  cluster_size: {dist: uniform_int, low: 2, high: 4}
+  variant_types: [abbreviation, punctuation, legal_suffix, address_format]
+  applies_to_market: UK
+
+# ---------------------------------------------------------------------------
+# H6 - Risk misclassification
+# ---------------------------------------------------------------------------
+H6:
+  share_of_suspicious_forced_low: {dist: uniform, low: 0.0, high: 0.45}  # NULL at ~0
+
+# ---------------------------------------------------------------------------
+# H7 - Trigger neglect
+# ---------------------------------------------------------------------------
+H7:
+  baseline_neglect_rate: {dist: uniform, low: 0.05, high: 0.20}
+  concentration_multiplier: {dist: uniform, low: 1.0, high: 3.0}  # null at 1.0
+  concentrated_market: drawn_at_random
+
+# ---------------------------------------------------------------------------
+# H8 - Card label incompleteness. NEVER zero - this is a permanent design
+# feature, not a hypothesis. It exists so measured card-rule precision is a
+# FLOOR, not an estimate, and so the analyst has to say so.
+# ---------------------------------------------------------------------------
+H8:
+  unlabelled_share_of_truly_suspicious: {dist: uniform, low: 0.20, high: 0.60}
+
+# ---------------------------------------------------------------------------
+# DECOY - one dimension with nothing wrong at all.
+# Costs nothing to generate. Its value is that a clean result somewhere proves
+# the rules are not simply flagging everything. "I checked six dimensions and one
+# was genuinely clean" is far more credible than "everything was broken".
+# ---------------------------------------------------------------------------
+decoy:
+  enabled: true
+  clean_dimension: drawn_at_random
+  # The chosen dimension gets NO planted defects in ANY market.
+
+# ---------------------------------------------------------------------------
+# Card-activity layer
+# ---------------------------------------------------------------------------
+card_layer:
+  months: 12
+  period_ends: 2026-03-31          # aligns with policy.as_of_date
+  event_rates_per_customer_month:
+    payment: 1.2
+    merchant_refund: 0.15
+    cash_advance: 0.08
+    refund_request: 0.02
+  # ~870k events + 600k statement rows. Ceiling is 2M (CLAUDE.md 8.7); the margin
+  # matters because planted typologies add events on top.
+  typology_prevalence:                                            # ALL NULL-CAPABLE
+    overpayment_refund_cycling: {dist: uniform, low: 0.000, high: 0.020}
+    third_party_funding:        {dist: uniform, low: 0.000, high: 0.020}
+    refunds_without_purchases:  {dist: uniform, low: 0.000, high: 0.012}
+    cash_advance_velocity:      {dist: uniform, low: 0.000, high: 0.012}
+
+# ---------------------------------------------------------------------------
+# Record-level errors (CLAUDE.md 8.8). Rates per applicable record.
+# ---------------------------------------------------------------------------
+record_level_errors:
+  invalid_format:            {dist: uniform, low: 0.005, high: 0.04}
+  future_date:               {dist: uniform, low: 0.001, high: 0.015}
+  expired_document:          {dist: uniform, low: 0.02,  high: 0.10}
+  orphan_beneficial_owner:   {dist: uniform, low: 0.002, high: 0.02}
+  ownership_total_over_100:  {dist: uniform, low: 0.01,  high: 0.06}
+  missing_mandatory_field:   {dist: uniform, low: 0.02,  high: 0.12}
+  register_mismatch:         {dist: uniform, low: 0.03,  high: 0.15}
+  whitespace_not_null:       {dist: uniform, low: 0.10,  high: 0.35}
+  # ^ share of "missing" values rendered as whitespace rather than null.
+  #   Deliberate: a completeness rule built only on .isna() will under-report.
+  #   Same trap as fixture C004 in tests/conftest.py.

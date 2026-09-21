@@ -1,0 +1,36 @@
+# ---- Sealed answer key: not committed until Day 10 (CLAUDE.md Section 8.5) ----
+sealed/
+
+# ---- Data: large files, never committed ----
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.csv
+*.parquet
+*.pbix
+!tests/fixtures/*.csv
+!outputs/issue_log.csv
+!outputs/powerbi/*.csv
+!outputs/standardisation_baseline.csv
+
+# ---- Python ----
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# ---- Private learner context, not committed ----
+CLAUDE.local.md
+
+# ---- Secrets ----
+.env
+*.key
+
+# ---- OS ----
+Thumbs.db
+desktop.ini
+.DS_Store

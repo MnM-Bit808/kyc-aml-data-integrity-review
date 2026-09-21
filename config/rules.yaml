@@ -1,0 +1,46 @@
+# Written by Claude Code - infrastructure, not analysis
+# Monitoring rule thresholds (Module 5). All null until the analyst tunes them.
+#
+# CRITICAL: thresholds are tuned on the TUNING split only, then frozen before the
+# holdout is scored once. CLAUDE.md Section 11: never report tuned performance on
+# tuning data. Record the frozen values here with the date they were frozen.
+
+status: NOT_YET_TUNED
+frozen_on: null
+
+validation:
+  # Set on Day 2 after the feasibility check (CLAUDE.md Module 5).
+  # One of: time_split | time_split_pattern_aware | account_cv
+  method: null
+  justification: null
+  split_point: null
+
+transfer_rules:
+  large_single_transfer:
+    enabled: false
+    amount_threshold: null
+    currency_handling: null   # how are multi-currency amounts compared?
+  fan_out:
+    enabled: false
+    min_distinct_recipients: null
+    window_hours: null
+  fan_in:
+    enabled: false
+    min_distinct_senders: null
+    window_hours: null
+  structuring_below_threshold:
+    enabled: false
+    reporting_threshold: null
+    proximity_pct: null       # how close to the threshold counts as "just below"
+    min_count_in_window: null
+    window_hours: null
+
+card_rules:
+  overpayment_refund_cycling:
+    enabled: false
+    overpayment_ratio: null   # payment / statement_balance
+    refund_within_days: null
+  third_party_funding:
+    enabled: false
+    min_distinct_payers: null
+    window_days: null

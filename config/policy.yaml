@@ -1,0 +1,47 @@
+# Written by Claude Code - infrastructure, not analysis
+# Fictional Issuer policy. Every value here is an ASSUMPTION, not law.
+# CONFIRMED by the analyst 2026-09-20. Never hard-code these - read them from this file.
+
+status: CONFIRMED
+confirmed_on: 2026-09-20
+
+# The date all "overdue" calculations are measured against. Set ONCE, never let it drift -
+# a moving as-of date is the commonest way this kind of analysis becomes irreproducible.
+#
+# Chosen as 31 March 2026 because that is the date Australia's new ongoing customer due
+# diligence obligations commenced (verified, docs/sources.md S1). The leadership question is
+# therefore being asked on the exact day the obligation bites.
+as_of_date: 2026-03-31
+
+periodic_review_cycle_days:
+  High: 365
+  Medium: 1095
+  Low: 1825
+
+trigger_review:
+  deadline_days: 30
+  trigger_types:
+    - monitoring_alert_transfer
+    - monitoring_alert_card
+    - change_address
+    - change_ownership
+    - change_name
+    - change_occupation
+    - change_pep_status
+
+beneficial_ownership:
+  # VERIFIED against MLR 2017 reg. 5 on 2026-09-20: the test is MORE THAN 25%,
+  # strictly greater. A rule using >= is wrong and overstates the Issuer's exposure.
+  # tests/conftest.py fixture C012 sits at exactly 25.0% and must NOT be flagged.
+  threshold_pct_exclusive: 25.0
+  verification_evidence_required: true
+  # VERIFIED, MLR 2017 reg. 28: relying on the Companies House register ALONE does not
+  # discharge the duty. The register comparison is a consistency check that raises
+  # questions, not a verification method. See docs/sources.md note S5.
+  register_alone_is_insufficient: true
+
+japan_freshness:
+  # Customers onboarded before this date are the "long-tenured" focus group.
+  # Five years before as_of_date, matching the Low-risk cycle length.
+  # PROPOSED by Claude, not explicitly approved - change freely before the generator runs.
+  onboarding_cutoff_date: 2021-03-31
