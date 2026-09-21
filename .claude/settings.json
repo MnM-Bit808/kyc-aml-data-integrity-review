@@ -5,7 +5,11 @@
       "Bash(cat ./sealed/**)",
       "Bash(type ./sealed/**)",
       "Glob(./sealed/**)",
-      "Grep(./sealed/**)"
+      "Grep(./sealed/**)",
+      "Read(./generator/generate.py)",
+      "Read(./generator/acceptance_checks.py)",
+      "Bash(cat ./generator/*.py)",
+      "Grep(./generator/*.py)"
     ]
   }
 }

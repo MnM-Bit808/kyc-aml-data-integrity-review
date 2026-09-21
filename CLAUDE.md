@@ -213,11 +213,11 @@ That is a weaker claim than "blind analysis," and it is the true one. Do not let
 1. Generation happens in a **separate Claude Code session** started only for this purpose. That session writes `generator/generate.py`, runs it, and ends.
 2. The generator **draws hidden parameters at random at run time** (within the ranges agreed in brainstorming) using a secret seed stored only in the answer key, so reading the generator code does **not** reveal the answers.
 3. The generator derives `transfer_suspicious` and `suspicious_role` from the IBM data using the Section 8.2 rule, and conditions H2 and H6 on `transfer_suspicious`.
-4. Outputs to `data/raw/`: `customers.csv`, `beneficial_owners.csv`, `uk_register_extract.csv`, `customer_changes.csv`, `card_statements.csv`, `card_activity.csv`.
+4. Outputs to `data/raw/`: `customers.csv`, `beneficial_owners.csv`, `uk_register_extract.csv`, `customer_changes.csv`, `card_statements.csv`, `card_activity.csv`, and `card_labels.csv` (`customer_id`, `card_suspicious` - one row per account, kept out of the event-level activity file so the label is not repeated per event). To `data/processed/`: `customer_labels.csv`, `sampling_weights.csv`, `sampled_transactions.parquet`.
 5. Output to `sealed/answer_key.json`: drawn parameters, planted-issue counts, IDs of planted records, true typology labels (including those deliberately left unlabelled).
 6. `.claude/settings.json`: `{"permissions": {"deny": ["Read(./sealed/**)"]}}`. **Test on Day 1 that this block works** (ask a working session to read the file and confirm it is refused). Add `sealed/` to `.gitignore` until Day 10.
 7. **Working sessions must never read, grep, list, or infer from `sealed/`.** If asked, refuse and remind the analyst.
-8. Honour system for the analyst too: they do not open `sealed/` until Day 10.
+8. Honour system for the analyst too: they do not open `sealed/` **or `generator/generate.py` and `generator/acceptance_checks.py`** until Day 10. The code reveals *how* defects were planted - including the exact messy-text variants - which would contaminate Module 1b's synonym map and the H5 duplicate detection. Working sessions are blocked from reading them by `.claude/settings.json`. `GENERATOR_SPEC.md` is fine to read; it describes design, not mechanism.
 9. Synthetic names via `Faker` (locales `en_GB`, `en_AU`, `ja_JP`). No real people, companies, or registration numbers.
 
 ### 8.6 Customer schemas (generator output)
