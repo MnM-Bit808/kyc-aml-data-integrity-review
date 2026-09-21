@@ -342,6 +342,7 @@ Moved into the protected set in version 3, because it was the project's only cov
 1. How many `transfer_suspicious` accounts fall in the proposed holdout window.
 2. How many laundering patterns in `HI-Small_Patterns.txt` straddle the cut point (a fan-out running from day 4 to day 8 becomes two unlabelled fragments).
 3. Whether laundering is distributed evenly across the 10 days or concentrated.
+4. How many transactions fall **after 10 September 2022**, and whether they are all laundering. The dataset author notes that transactions beyond the stated date range exist and are all laundering. If they land in the evaluation window, the tail of the holdout is 100% laundering and every rule looks better than it is. Decide explicitly whether to exclude them, and record why.
 
 Then take the first rung of this ladder that the data supports, and state in the README which one was used and why:
 1. **Time split** — preferred. Tune on the earlier period, evaluate once on the later period. Requires enough positives in the holdout for the precision estimate to be stable.

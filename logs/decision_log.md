@@ -217,3 +217,41 @@ test suite re-run at the new location before the OneDrive copy was removed.
 commit history is version control, whereas file sync only ever holds the latest state. Consider
 pushing to GitHub: it is real off-machine backup, and a public repository is itself part of the
 project when it is shared.
+
+---
+
+## 2026-09-21 - IBM dataset acquired and verified
+
+Downloaded from Kaggle by the analyst and moved into `data/raw/` (gitignored, not redistributed).
+Checked against the figures IBM publishes on the dataset page before anything is built on it.
+
+| Check | Published | Downloaded file |
+|---|---|---|
+| `HI-Small_Trans.csv` size | 475.66 MB | 475,664,283 bytes |
+| `HI-Small_Patterns.txt` size | 323.84 kB | 323,844 bytes |
+| Columns | 11 | 11 |
+| Transactions | ~5M | 5,078,345 |
+| Laundering transactions | ~5.1K | 5,177 |
+| Laundering rate | 1 per 981 | 1 per 981 (5,078,345 / 5,177) |
+| Pattern blocks | - | 370 BEGIN, 370 END, file ends on a closing line |
+
+Line endings are CRLF; pandas and DuckDB both handle this.
+
+**Near-miss worth recording.** The first file selected on Kaggle was `HI-Large_Trans.csv` (17.05 GB),
+because the Data Explorer lists files alphabetically, so every Large file precedes the Small ones and
+the names differ by one word. Caught by comparing the displayed size against the expected 475.66 MB.
+The on-screen preview of the patterns file is also truncated, so copy-pasting from the page would have
+produced a silently incomplete file; it was downloaded whole instead. Both are the same lesson: verify a
+file against an independent expectation (size, row count, published statistic) before trusting it.
+
+**Two Day 2 carry-forwards.**
+
+1. The raw header names two columns `Account` (sender and receiver). pandas renames the second to
+   `Account.1` on load; DuckDB may name it differently. Five Module 1 rules must reconcile exactly across
+   the two engines, so confirm each engine's column name before joining on it.
+2. The dataset author notes that transactions exist **after** the stated 1-10 September 2022 range and
+   that all of them are laundering. Not yet measured. Added to the Module 5 feasibility check in
+   CLAUDE.md as a fourth measurement - if those rows fall in the evaluation window they inflate every
+   rule's apparent performance.
+
+**Licence:** Community Data License Agreement - Sharing 1.0. Recorded in `docs/sources.md`.

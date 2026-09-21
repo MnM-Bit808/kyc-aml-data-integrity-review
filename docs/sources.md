@@ -140,6 +140,9 @@ design choice.
   https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml
 - Altman et al., "Realistic Synthetic Financial Transactions for Anti-Money Laundering Models",
   arXiv:2306.16424
+- **Licence:** Community Data License Agreement - Sharing - Version 1.0 (CDLA-Sharing-1.0), as shown
+  on the Kaggle dataset page, checked 2026-09-21. The raw files are not redistributed in this repository;
+  users download them from Kaggle directly.
 
 ---
 
