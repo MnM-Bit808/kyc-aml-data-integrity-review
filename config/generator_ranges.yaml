@@ -13,7 +13,7 @@
 
 approved_on: 2026-09-20
 approved_by: the analyst
-locked: false          # set true the moment the generator runs
+locked: true          # set true the moment the generator runs
 
 seeds:
   # TWO seeds, deliberately separated.
