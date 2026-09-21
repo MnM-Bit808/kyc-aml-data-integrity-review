@@ -70,6 +70,12 @@ artefact. Full regeneration from seed becomes possible on Day 10 when the key op
 ## Sampling
 
 - Target 50,000 accounts, account identity = `(From Bank, Account)` / `(To Bank, Account.1)`.
+- **Read `From Bank`, `To Bank` and both account columns as strings (`dtype=str`), never as integers.**
+  Bank codes carry leading zeros (`00952`, `0111632`, `000`). Parsed as numbers, distinct codes such as
+  `0952` and `00952` would collapse into one, silently merging different banks and corrupting the key.
+  The analyst's Day 2 derivation must use the same string keys, or the two will not match.
+- The raw header repeats the name `Account` for sender and receiver. pandas renames the second to
+  `Account.1`; do not rely on another tool's renaming convention.
   **Verify that pair is unique before relying on it** and fail loudly if not.
 - Stratified: oversample laundering-involved accounts so the positive class supports the Module 5
   holdout. Record sampling weights to `data/processed/sampling_weights.csv`.
@@ -124,6 +130,12 @@ deliberately left unlabelled** (H8); which dimension was chosen as the decoy.
 ---
 
 ## Acceptance checks the sealed session must run before it ends
+
+**Run every check from inside Python** - in `generate.py` or a companion script. The project's
+`.claude/settings.json` denies Claude's Read, Glob and Grep tools on `sealed/**`, and this is deliberate.
+The session must therefore verify `answer_key.json` by loading it within Python, **not** by opening it
+with a tool, and **must not try to work around the denial.** When checking it, print only PASS/FAIL,
+never the values it contains.
 
 Print each as PASS or FAIL. Any FAIL means fix and regenerate.
 
