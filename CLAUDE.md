@@ -301,7 +301,7 @@ Moved into the protected set in version 3, because it was the project's only cov
 - Standardise `occupation_text`, `industry_text`, and `business_name` using **rules and fuzzy matching only** — normalisation, token cleanup, a hand-built synonym map, and a string-similarity match (e.g. `rapidfuzz`). No external application programming interface (API), no network dependency, nothing that can fail on Day 9.
 - Feeds H5 (duplicate business entities) directly: name-variant matching is the detection method.
 - Report **coverage** (share of records mapped to a standard value), **residual** (share left unmapped), and a hand-inspected sample of errors in both directions.
-- the analyst hand-labels ~100 records to measure against. These same 100 labels are reused by Module 8 if it survives.
+- The analyst hand-labels ~100 records to measure against. These same 100 labels are reused by Module 8 if it survives.
 - **Acceptance:** measured coverage and error rate, not asserted; the ~100 hand labels committed; error examples logged with the reason each failed.
 
 ### Module 2 — Issue management
@@ -419,7 +419,7 @@ Rewritten in version 3 around one question that version 2 never asked: **what is
 - Jupyter notebooks in VS Code for learning; reusable logic moved into `src/` functions with tests.
 - Libraries: pandas, numpy, duckdb, pyarrow, scipy, statsmodels, matplotlib, seaborn, faker, rapidfuzz, pyyaml, pytest, anthropic (Module 8 only).
 - Power BI Desktop (Windows).
-- Check machine RAM before loading the full 5M-row file into pandas; prefer DuckDB directly on Parquet. Convert raw CSV to Parquet once.
+- The machine has 31 GB RAM, so the 5M-row file fits in pandas. DuckDB on Parquet is still preferred as the better habit. Convert raw CSV to Parquet once.
 
 ```
 kyc-aml-data-integrity-review/
@@ -540,19 +540,24 @@ rehearse that are kept in `CLAUDE.local.md` and are not committed.
 
 ---
 
-## 19. Open decisions (resolve in the first brainstorming session; record in `logs/decision_log.md`)
+## 19. Open decisions (record outcomes in `logs/decision_log.md`)
 
-Closed in version 3: the inference target and use of confidence intervals (Section 11); the definition of `transfer_suspicious` (Section 8.2); the Module 1 double-implementation scope (Module 1); the home of unstructured-data work (Module 1b); the out-of-time validation approach (Module 5 ladder, resolved by data on Day 2).
+**Closed:** inference target and use of confidence intervals (Section 11); definition of
+`transfer_suspicious` (Section 8.2); Module 1 double-implementation scope; home of unstructured-data
+work (Module 1b); out-of-time validation approach (Module 5 ladder, resolved by data on Day 2);
+**H1-H8 and card-layer ranges** (approved 2026-09-20, locked in `config/generator_ranges.yaml`);
+**policy values** (confirmed 2026-09-20, `as_of_date` 2026-03-31, now frozen because the answer key
+records the file's hash); **machine setup** (Python 3.14.2, 31 GB RAM).
 
-Still open:
-1. Hidden patterns H1–H8 and their parameter ranges.
-2. Periodic cycle lengths and trigger-review deadline (`config/policy.yaml`).
-3. Card-layer parameters: payment and refund volumes, typology prevalence ranges, label-incompleteness range.
-4. Capacity and customer-impact assumptions with sources (`config/capacity.yaml`).
-5. Market mapping: currency-based vs generator-assigned (after Day 2).
-6. Which five Module 1 rules get cross-engine reconciliation, and which engine is primary.
-7. Whether Module 8 stays in scope (decide on Day 8).
-8. Machine setup: RAM and Power BI Desktop availability. (Python resolved on Day 1: 3.14.2, virtual environment built, all packages verified, versions locked.)
+**Still open:**
+1. Capacity and customer-impact assumptions - proposed in `config/capacity.yaml`, confirm on Day 8
+   alongside the sensitivity analysis.
+2. Market mapping - the generator assigned markets; the Day 2 currency check still has to be run and
+   recorded, so the reasoning is documented rather than assumed.
+3. Primary engine and the five reconciled rules - recommended pandas primary plus five named rules
+   (`docs/plans/day1_decisions_proposal.md`, item 6). Confirm on Day 3.
+4. Whether Module 8 stays in scope - decide on Day 8.
+5. Power BI Desktop availability - confirm before Day 8.
 
 ---
 
@@ -561,7 +566,7 @@ Still open:
 - American Express Form 10-K, fiscal year 2023 — international jurisdictions with significant billed business.
 - IBM AML dataset (Kaggle): https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml
 - Altman et al., "Realistic Synthetic Financial Transactions for Anti-Money Laundering Models," arXiv 2306.16424.
-- AUSTRAC (Australia): https://www.austrac.gov.au — reform commencement 31 March 2026; ongoing CDD without transition; initial CDD transition to 2029.
+- AUSTRAC (Australia): https://www.austrac.gov.au — reform commencement 31 March 2026; new ongoing CDD obligations from that date; initial CDD transition to 30 March 2029. "Without transition" overstates it - see `docs/sources.md` S3.
 - UK MLR 2017: https://www.legislation.gov.uk — beneficial owner definition and verification duties.
 - Companies House identity verification (UK): GOV.UK — from 18 November 2025, 12-month transition.
 - FATF Japan country page: https://www.fatf-gafi.org/en/countries/detail/Japan.html — 2021 Mutual Evaluation, enhanced follow-up.
